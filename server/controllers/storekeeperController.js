@@ -18,7 +18,9 @@ class StorekeeperController {
     }
 
     async getAll (request, response) {
-        
+        let {limit, offset} = request.query
+        const storekeepers = await Storekeeper.findAndCountAll({limit, offset})
+        return response.json(storekeepers)
     }
 
     async getOne (request, response) {

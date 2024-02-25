@@ -9,7 +9,7 @@ const Role = sequelize.define('role', {
 const User = sequelize.define('user', {
     id: {type: DataTypes.STRING, primaryKey: true},
     login: {type: DataTypes.STRING, unique: true, allowNull: false},
-    passowrd: {type: DataTypes.STRING, allowNull: false}
+    password: {type: DataTypes.STRING, allowNull: false}
 })
 
 const Storekeeper = sequelize.define('storekeeper', {
@@ -24,7 +24,7 @@ const Warehouse = sequelize.define('warehouse', {
     id: {type: DataTypes.STRING, primaryKey: true},
     address: {type: DataTypes.STRING, unique: true, allowNull: false},
     total_capacity: {type: DataTypes.FLOAT(2), allowNull: false},
-    occupied: {type: DataTypes.FLOAT(2)}
+    occupied: {type: DataTypes.FLOAT(2), defaultValue: 0}
 })
 
 const ProductWarehouse = sequelize.define('product_warehouse', {
@@ -35,8 +35,8 @@ const Product = sequelize.define('product', {
     id: {type: DataTypes.STRING, primaryKey: true},
     article_number: {type: DataTypes.STRING, allowNull: false},
     name: {type: DataTypes.STRING, allowNull: false},
-    in_stock: {type: DataTypes.INTEGER}, 
-    warehouse_space: {type: DataTypes.FLOAT(2)}
+    in_stock: {type: DataTypes.INTEGER, defaultValue: 0}, 
+    warehouse_space: {type: DataTypes.FLOAT(2), defaultValue: 0}
 })
 
 Role.hasMany(User)
