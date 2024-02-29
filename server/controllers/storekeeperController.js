@@ -24,7 +24,9 @@ class StorekeeperController {
     }
 
     async getOne (request, response) {
-        
+        const {id} = request.params
+        const storekeeper = await Storekeeper.findOne({where: {id}})
+        return response.json(storekeeper)
     }
 }
 

@@ -1,16 +1,22 @@
 const {User} = require('../models/models')
 const {randomUUID} = require("crypto")
 const ApiError = require("../error/ApiError")
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 class UserController {
-    async create (request, response) {
-        const user = {
-            id: randomUUID(), 
-            login: request.body.login, 
-            password: request.body.password, 
+    async create (request, response, next) {
+        const {login, password, roleId} = request.body
+        if (!login || !password) {
+            return next(ApiError.badRequest('Некорректный логин или пароль'))
+        }
+        const candidate = await User.findOne({where: {login}})
+        if (candidate) {
+            return next(ApiError.conflict('Пользователь с таким логином уже существует'))
         }
         
-        const createdUser = await User.create(user)
+        const hashPassword = await bcrypt.hash(password, 5)
+        const createdUser = await User.create({ id: randomUUID(), login, password: hashPassword, roleId })
 
         return response.json(createdUser)
     }
@@ -22,19 +28,25 @@ class UserController {
     }
 
     async getOne (request, response) {
-        
+        const {id} = request.params
+        const user = await User.findOne({where: {id}})
+        return response.json(user)
     }
 
-    async login (request, response) {
-
-    }
-
-    async check (request, response, next) {
-        const {id} = request.query
-        if (!id) {
-            return next(ApiError.badRequest('Не задан id'))
+    async login (request, response, next) {
+        const {login, password} = request.body
+        const user = await User.findOne({where: {login}})
+        if (!user) {
+            return next(ApiError.notFound('Пользователь не найден'))
         }
-        response.json(id)
+
+        let comparePassowrd = bcrypt.compareSync(password, user.password)
+        if (!comparePassowrd) {
+            return next(ApiError.unauthorized('Указан неверный пароль'))
+        }
+
+        const token = jwt.sign({id: user.id, login, role: user.roleId}, process.env.SECRET_KEY, {expiresIn: '24h'})
+        return response.json({token})
     }
 }
 

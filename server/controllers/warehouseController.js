@@ -23,7 +23,9 @@ class WarehouseController {
     }
 
     async getOne (request, response) {
-        
+        const {id} = request.params
+        const warehouse = await Warehouse.findOne({where: {id}})
+        return response.json(warehouse)
     }
 }
 

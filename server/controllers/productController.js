@@ -24,7 +24,9 @@ class ProductController {
     }
 
     async getOne (request, response) {
-        
+        const {id} = request.params
+        const product = await Product.findOne({where: {id}})
+        return response.json(product)
     }
 }
 
