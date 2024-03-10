@@ -28,6 +28,18 @@ class ProductController {
         const product = await Product.findOne({where: {id}})
         return response.json(product)
     }
+
+    async edit (request, response) {
+        const {id} = request.params
+        const product = await Product.update(request.body, {where: {id}, returning: true})
+        return response.json(product[1])
+    }
+
+    async delete (request, response) {
+        const {id} = request.params
+        const product = await Product.destroy({where: {id}})
+        return  response.status(204).json({message: ""})
+    }
 }
 
 module.exports = new ProductController()

@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 class AuthController {
     async auth (request, response, next) {
         const token = jwt.sign(
-            {id: request.user.id, login: request.user.login, role: request.user.roleId}, 
+            {id: request.user.id, login: request.user.login, role: request.user.role}, 
             process.env.SECRET_KEY, 
             {expiresIn: '24h'}
         )

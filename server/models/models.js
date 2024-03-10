@@ -1,15 +1,11 @@
 const sequelize = require('../db')
 const {DataTypes} = require('sequelize')
 
-const Role = sequelize.define('role', {
-    id: {type: DataTypes.STRING, primaryKey: true},
-    name: {type: DataTypes.STRING, unique: true, allowNull: false}
-})
-
 const User = sequelize.define('user', {
     id: {type: DataTypes.STRING, primaryKey: true},
     login: {type: DataTypes.STRING, unique: true, allowNull: false},
-    password: {type: DataTypes.STRING, allowNull: false}
+    password: {type: DataTypes.STRING, allowNull: false},
+    role: {type: DataTypes.STRING, allowNull: false, defaultValue: 'USER'}
 })
 
 const Storekeeper = sequelize.define('storekeeper', {
@@ -39,9 +35,6 @@ const Product = sequelize.define('product', {
     warehouse_space: {type: DataTypes.FLOAT(2), defaultValue: 0}
 })
 
-Role.hasMany(User)
-User.belongsTo(Role)
-
 User.hasOne(Storekeeper)
 Storekeeper.belongsTo(User)
 
@@ -53,7 +46,6 @@ Product.belongsToMany(Warehouse, {through: ProductWarehouse})
 
 module.exports = {
     User,
-    Role,
     Storekeeper,
     Warehouse,
     Product,
