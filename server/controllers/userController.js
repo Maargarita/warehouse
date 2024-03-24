@@ -46,6 +46,18 @@ class UserController {
         const token = jwt.sign({id: user.id, login, role: user.role}, process.env.SECRET_KEY, {expiresIn: '24h'})
         return response.json({token})
     }
+
+    async edit (request, response) {
+        const {id} = request.params
+        const user = await User.update(request.body, {where: {id}, returning: true})
+        return response.json(user[1])
+    }
+
+    async delete (request, response) {
+        const {id} = request.params
+        const user = await User.destroy({where: {id}})
+        return  response.status(204).json({message: ""})
+    }
 }
 
 module.exports = new UserController()

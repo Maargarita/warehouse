@@ -28,6 +28,18 @@ class StorekeeperController {
         const storekeeper = await Storekeeper.findOne({where: {id}})
         return response.json(storekeeper)
     }
+
+    async edit (request, response) {
+        const {id} = request.params
+        const storekeeper = await Storekeeper.update(request.body, {where: {id}, returning: true})
+        return response.json(storekeeper[1])
+    }
+
+    async delete (request, response) {
+        const {id} = request.params
+        const storekeeper = await Storekeeper.destroy({where: {id}})
+        return  response.status(204).json({message: ""})
+    }
 }
 
 module.exports = new StorekeeperController()
