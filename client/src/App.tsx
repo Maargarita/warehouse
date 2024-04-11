@@ -1,9 +1,12 @@
 import React, {FC} from 'react'
-import { Auth } from "./pages/Auth";
+import { BrowserRouter } from 'react-router-dom';
+import { AppRouter } from './components/router/AppRouter';
 
 export const App: FC = () => {
     return (
-      <Auth/>  
+      <BrowserRouter>
+        <AppRouter/>
+      </BrowserRouter>
     );
 }
 
