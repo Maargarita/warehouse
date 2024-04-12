@@ -1,4 +1,4 @@
-import { Login } from "../../pages/Login";
+import { LogIn } from "../../pages/LogIn";
 import { Products } from "../../pages/Products";
 import { Storekeepers } from "../../pages/Storekeepers";
 import { Users } from "../../pages/Users";
@@ -15,7 +15,7 @@ export const authRoutes = [
 export const publicRoutes = [
     {
         path: paths.LOGIN_ROUTE,
-        Component: Login
+        Component: LogIn
     }
 ]
 

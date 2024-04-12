@@ -2,9 +2,13 @@ import React, {FC} from 'react'
 import {Routes, Route} from 'react-router-dom'
 import { adminRoutes, authRoutes, publicRoutes } from './routers'
 import { ErrorPage } from '../../pages/ErrorPage'
+import { TypedUseSelectorHook, useSelector } from 'react-redux'
+import { RootState } from '../../store/store'
 
 export const AppRouter: FC = () => {
-    const isAuth = false
+    const AppSelector: TypedUseSelectorHook<RootState> = useSelector
+    const isAuth = AppSelector<Boolean>(state => state.user.isAuth)
+
     return (
         <Routes>
             { isAuth && 
