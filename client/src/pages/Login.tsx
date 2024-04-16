@@ -3,8 +3,12 @@ import React, { FC, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid'
 import { useNavigate } from 'react-router-dom'
+import { login } from '../http/userAPI'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../store/store'
+import { changeUserAuth, setUser } from '../store/slices/userSlice'
 
-interface LogInSubmitForm {
+interface LogInForm {
     login: string;
     password: string;
 }
@@ -12,21 +16,29 @@ interface LogInSubmitForm {
 export const LogIn: FC = () => {
     const navigate = useNavigate()
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+    const dispatch = useDispatch<AppDispatch>()
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LogInSubmitForm>()
+    } = useForm<LogInForm>()
 
-    const onSubmitClick = async (form: LogInSubmitForm) => {
-        console.log(form);
+    const onSubmitClick = async (form: LogInForm) => {
+        try {
+            const responce = await login(form.login, form.password)
+            dispatch(setUser(responce))
+            dispatch(changeUserAuth(true))
+            navigate("/products")
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
-        <div id='log-in' className='tw-flex tw-min-h-full tw-items-center tw-justify-center tw-px-4 sm:tw-px-6 lg:tw-px-8'>
+        <section id='log-in' className='tw-flex tw-h-screen tw-items-center tw-justify-center tw-px-4 sm:tw-px-6 lg:tw-px-8'>
             <div className='tw-w-full tw-border tw-border-gray-200 tw-rounded-lg tw-max-w-md tw-space-y-8 tw-bg-white'>
                 <div className='tw-mx-12 tw-my-4'>
-                    <h2 className='tw-mt-4 tw-text-center tw-text-2xl tw-font-bold tw-tracking-tight tw-text-gray-700'>Авторизация</h2>
+                    <h2 className='tw-mt-4 tw-text-center tw-text-2xl tw-font-bold tw-tracking-tight tw-text-gray-900'>Авторизация</h2>
                     <form onSubmit={handleSubmit(onSubmitClick)}>
                         <label htmlFor="login" className="tw-block tw-text-sm tw-font-medium tw-mt-4 tw-px-2 tw-text-gray-900">Логин</label>
                         <input 
@@ -67,9 +79,9 @@ export const LogIn: FC = () => {
                         </div>
                         {errors.password && <p className='tw-text-sm tw-font-medium tw-text-red-400 tw-px-2'>Поле является обязательным</p>}
                         <button 
-                            className='tw-group tw-relative tw-flex tw-w-full tw-justify-center tw-rounded-md tw-bg-gray-700 tw-mx-auto tw-my-6 tw-px-3 
-                                        tw-py-2 tw-text-sm tw-font-semibold tw-text-white hover:tw-bg-gray-500 focus-visible:tw-outline focus-visible:tw-outline-2 
-                                        focus-visible:tw-outline-offset-2 focus-visible:tw-outline-gray-600'
+                            className='tw-group tw-relative tw-flex tw-w-full tw-justify-center tw-rounded-md tw-bg-green-900 tw-mx-auto tw-my-6 tw-px-3 
+                                        tw-py-2 tw-text-sm tw-font-semibold tw-text-white hover:tw-bg-green-700 focus-visible:tw-outline focus-visible:tw-outline-2 
+                                        focus-visible:tw-outline-offset-2 focus-visible:tw-outline-green-700'
                             type='submit'
                         >
                             Войти
@@ -77,6 +89,6 @@ export const LogIn: FC = () => {
                     </form>
                 </div>
             </div>
-        </div>
+        </section>
     )
 }

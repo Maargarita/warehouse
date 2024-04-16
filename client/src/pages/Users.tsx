@@ -1,7 +1,10 @@
 import React, {FC} from 'react'
+import { NavBar } from '../components/NavBar'
 
 export const Users: FC = () => {
     return (
-        <div>Users</div>
+        <section>
+            <NavBar/>
+        </section>
     )
 }
