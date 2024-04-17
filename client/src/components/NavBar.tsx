@@ -3,51 +3,70 @@ import { paths } from '../utils/consts'
 import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import { RootState } from '../store/store'
 import { UserObj } from '../store/slices/userSlice'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 export const NavBar: FC = () => {
     const AppSelector: TypedUseSelectorHook<RootState> = useSelector
     const user = AppSelector<UserObj>(state => state.user.user)
+    const navigate = useNavigate()
+
+    const onLogOutClick = () => {
+        localStorage.removeItem('token')
+        navigate(paths.LOGIN_ROUTE)
+    }
 
     return (
-        <div id='nav-bar' className="tw-flex tw-flex-row tw-h-16 tw-items-center tw-justify-between tw-px-4 tw-bg-green-900">
+        <nav id='nav-bar' className="tw-flex tw-flex-row tw-h-16 tw-items-center tw-justify-between tw-px-4 tw-bg-green-900">
             <div className='tw-flex tw-flex-row'>
-                <a
-                    href={paths.PRODUCTS_ROUTE}
-                    className='tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-underline tw-rounded-md tw-px-3 tw-py-2'
+                <NavLink
+                    to={paths.PRODUCTS_ROUTE}
+                    className={( {isActive} ) => (`
+                        tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-underline tw-rounded-md tw-px-3 tw-py-2
+                        ${isActive && 'tw-underline'}
+                    `)}
                 >
                     Товары
-                </a>
+                </NavLink>
                 { user.role === 'ADMIN' &&
                     <>
-                        <a
-                            href={paths.WAREHOUSES_ROUTE}
-                            className='tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-bg-green-700 tw-rounded-md tw-px-3 tw-py-2'
+                        <NavLink
+                            to={paths.WAREHOUSES_ROUTE}
+                            className={( {isActive} ) => (`
+                                tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-underline tw-rounded-md tw-px-3 tw-py-2
+                                ${isActive && 'tw-underline'}
+                            `)}
                         >
                             Склады
-                        </a>
-                        <a
-                            href={paths.USERS_ROUTE}
-                            className='tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-bg-green-700 tw-rounded-md tw-px-3 tw-py-2 '
+                        </NavLink>
+                        <NavLink
+                            to={paths.USERS_ROUTE}
+                            className={( {isActive} ) => (`
+                                tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-underline tw-rounded-md tw-px-3 tw-py-2
+                                ${isActive && 'tw-underline'}
+                            `)}
                         >
                             Пользователи
-                        </a>
-                        <a
-                            href={paths.STOREKEEPERS_ROUTE}
-                            className='tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-bg-green-700 tw-rounded-md tw-px-3 tw-py-2'
+                        </NavLink>
+                        <NavLink
+                            to={paths.STOREKEEPERS_ROUTE}
+                            className={( {isActive} ) => (`
+                                tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-underline tw-rounded-md tw-px-3 tw-py-2
+                                ${isActive && 'tw-underline'}
+                            `)}
                         >
                             Кладовщики
-                        </a>
+                        </NavLink>
                     </>
                 }
             </div>
 
-            <a
-                href={paths.LOGIN_ROUTE}
+            <button
+                onClick={onLogOutClick}
                 className='tw-text-sm tw-font-semibold tw-text-white tw-bg-gren-800 hover:tw-bg-green-700 tw-rounded-md tw-px-3 tw-py-2 tw-mr-10
                     tw-border-2 tw-border-white'
             >
                 Выйти
-            </a>
-        </div>
+            </button>
+        </nav>
     )    
 }

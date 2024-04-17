@@ -1,5 +1,5 @@
 
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/20/solid'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +7,9 @@ import { login } from '../http/userAPI'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../store/store'
 import { changeUserAuth, setUser } from '../store/slices/userSlice'
+import { jwtDecode } from 'jwt-decode'
+import { paths } from '../utils/consts'
+import { toast } from 'react-toastify'
 
 interface LogInForm {
     login: string;
@@ -24,13 +27,20 @@ export const LogIn: FC = () => {
     } = useForm<LogInForm>()
 
     const onSubmitClick = async (form: LogInForm) => {
+        const noResponse = setTimeout(() => {
+            toast.error('Сервис не отвечает', { position: "top-center" })
+        }, 5000)
+
         try {
-            const responce = await login(form.login, form.password)
-            dispatch(setUser(responce))
+            const response = await login(form.login, form.password)
+            clearTimeout(noResponse)
+            localStorage.setItem('token', response)
+            dispatch(setUser(jwtDecode(response)))
             dispatch(changeUserAuth(true))
-            navigate("/products")
-        } catch (e) {
-            console.log(e)
+            navigate(paths.PRODUCTS_ROUTE)
+        } catch (e: any) {
+            clearTimeout(noResponse)
+            toast.error(e.response.data.message, { position: "top-center"})
         }
     }
 
