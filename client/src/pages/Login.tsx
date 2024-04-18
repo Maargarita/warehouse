@@ -38,9 +38,9 @@ export const LogIn: FC = () => {
             dispatch(setUser(jwtDecode(response)))
             dispatch(changeUserAuth(true))
             navigate(paths.PRODUCTS_ROUTE)
-        } catch (e: any) {
+        } catch (error: any) {
             clearTimeout(noResponse)
-            toast.error(e.response.data.message, { position: "top-center"})
+            toast.error(error.response.data.message, { position: "top-center"})
         }
     }
 
