@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getUsersList } from "../../http/userAPI";
-import { RootState } from "../store";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { getUsersList } from "../../http/userAPI"
+import { RootState } from "../store"
+import { toast } from "react-toastify"
  
 export const fetchUsers = createAsyncThunk<FetchUsersProps, {}, {rejectValue: string}>(
     'user/fetchUsers',
@@ -9,6 +10,7 @@ export const fetchUsers = createAsyncThunk<FetchUsersProps, {}, {rejectValue: st
         const response = await getUsersList()
         return response.data
       } catch (error: any) {
+        toast.error(error.response.data.message, { position: "top-center"})
         return rejectWithValue(error.message)
       }
     }

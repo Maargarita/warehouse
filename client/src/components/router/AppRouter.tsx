@@ -22,6 +22,7 @@ export const AppRouter: FC = () => {
                 adminRoutes.map(({path, Component}) =>
                     <Route key={path} path={path} element={<Component/>}/>
             )}
+            <Route path='/' element={<Navigate to={paths.LOGIN_ROUTE}/>}/>
             <Route path='*' element={isAuth ? <ErrorPage/> : <Navigate to={paths.LOGIN_ROUTE}/>}/>
         </Routes>
     )
