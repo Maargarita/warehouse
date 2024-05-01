@@ -5,7 +5,8 @@ type ItemsListHeaderProps = {
     columns: {
         name: string,
         fieldName: string,
-        type: string
+        type: string,
+        mandatory: boolean
     }[],
     tableElement: RefObject<HTMLTableElement> | null
     headerElement: RefObject<HTMLDivElement> | null,
@@ -13,6 +14,7 @@ type ItemsListHeaderProps = {
     isMinScrollYPosition: boolean,
     sectionElement: RefObject<HTMLDivElement> | null
 }
+
 export const ItemsListHeader: FC<ItemsListHeaderProps> = ({columns, tableElement, headerElement, isVerticalScroll, isMinScrollYPosition, sectionElement}) => {
     const [sizingColumnIndex, setSizingColumnIndex] = useState(null)
     const [changedValues, setChangedValues] = useState<number[] | null>(null)

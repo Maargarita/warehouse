@@ -12,22 +12,32 @@ export const Users: FC = () => {
         {
             name: 'Логин',
             fieldName: 'login',
-            type: 'string'
+            type: 'string',
+            mandatory: true
+        },
+        {
+            name: 'Пароль',
+            fieldName: 'password',
+            type: 'string',
+            mandatory: true
         },
         {
             name: 'Роль',
             fieldName: 'role',
-            type: 'string'
+            type: 'string',
+            mandatory: true
         },
         {
             name: 'Создан',
             fieldName: 'createdAt',
-            type: 'date'
+            type: 'date',
+            mandatory: false
         },
         {
             name: 'Изменен',
             fieldName: 'updatedAt',
-            type: 'date'
+            type: 'date',
+            mandatory: false
         }
     ]
 
@@ -41,6 +51,7 @@ export const Users: FC = () => {
             <ItemsListContainer
                 list={usersList}
                 columns={userColumns}
+                isLoading={false}
             />
         </section>
     )

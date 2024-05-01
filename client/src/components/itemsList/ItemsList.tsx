@@ -1,10 +1,23 @@
-import React, {FC, Fragment, useState} from 'react'
-import { ItemsListContainerProps } from './ItemsListContainer'
+import React, {Dispatch, FC, Fragment, SetStateAction} from 'react'
 import { getFieldValue } from '../../utils/functionst'
 
-export const ItemsList: FC<ItemsListContainerProps> = ({columns, list}) => {
+type ItemsListProps = {
+    columns: 
+    {
+        name: string,
+        fieldName: string,
+        type: string,
+        mandatory: boolean
+    }[],
+    list: {
+        id: string
+    }[],
+    setSelectedItem: Dispatch<SetStateAction<{ id: string; }>>,
+    selectedItem: {id: string}
+}
+
+export const ItemsList: FC<ItemsListProps> = ({columns, list, setSelectedItem, selectedItem}) => {
     const defaultColumnSizes = columns.map(() => '150px').join(' ')
-    const [selectedItem, setSelectedItem] = useState({id: ''})
 
     return(
         <tbody className='tw-w-full'>
