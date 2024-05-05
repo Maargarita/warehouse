@@ -16,10 +16,11 @@ export type ItemsListContainerProps = {
     list: {
         id: string
     }[],
-    isLoading: boolean
+    isLoading: boolean,
+    onSubmitClick: (form: object, id: string | null) => void
 }
 
-export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, isLoading}) => {
+export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, isLoading, onSubmitClick}) => {
     const tableElement = useRef<HTMLTableElement>(null)
     const headerElement = useRef<HTMLDivElement>(null)
     const sectionElement = useRef<HTMLDivElement>(null)
@@ -96,6 +97,7 @@ export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, 
                 isEditMode={isEditMode}
                 columns={columns}
                 selectedItem={selectedItem}
+                onSubmitClick={onSubmitClick}
             />
         </section>
     )

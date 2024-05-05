@@ -16,15 +16,11 @@ type ItemContainerProps = {
             type: string,
             mandatory: boolean
         }[],
-    selectedItem: {id: string}   
+    selectedItem: {id: string},
+    onSubmitClick: (form: object, id: string | null) => void
 }
 
-export const ItemContainer: FC<ItemContainerProps> = ({isOpen, onCloseClick, isLoading, isEditMode, columns, selectedItem}) => {
-
-    const onSubmitClick = (form: object) => {
-        console.log(form)
-    }
-
+export const ItemContainer: FC<ItemContainerProps> = ({isOpen, onCloseClick, isLoading, isEditMode, columns, selectedItem, onSubmitClick}) => {
     return (
         <Transition.Root show={isOpen} as={Fragment}>
             <Dialog as="div" className="tw-relative tw-z-10" onClose={onCloseClick}>
@@ -77,7 +73,7 @@ export const ItemContainer: FC<ItemContainerProps> = ({isOpen, onCloseClick, isL
                                         {isLoading 
                                             ?   <Spinner/> 
                                             :   <>
-                                                     <div className='tw-h-16 tw-w-full tw-text-xl tw-font-bold tw-px-4 tw-py-4 tw-truncate'>
+                                                    <div className='tw-h-16 tw-w-full tw-text-xl tw-font-bold tw-px-4 tw-py-4 tw-truncate'>
                                                         {isEditMode ? 'Редактирование записи' : 'Новая запись'}
                                                     </div>
                                                     <div id='item-form' className='tw-h-full tw-overflow-hidden'>

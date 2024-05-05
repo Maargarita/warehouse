@@ -1,6 +1,6 @@
 import React, { FC } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
-import { FieldErrors, FieldValues } from 'react-hook-form'
+import { FieldError, FieldErrors, FieldErrorsImpl, FieldValues, Merge } from 'react-hook-form'
 
 type ItemFormNameProps ={
     item: 
@@ -10,10 +10,10 @@ type ItemFormNameProps ={
             type: string,
             mandatory: boolean
         },
-    errors: FieldErrors<FieldValues>
+    isError: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 }
 
-export const ItemFormName: FC<ItemFormNameProps> = ({item, errors}) => {
+export const ItemFormName: FC<ItemFormNameProps> = ({item, isError}) => {
     return (
         <>
             <div className='tw-flex tw-flex-row tw-gap-x-2'>
@@ -25,7 +25,7 @@ export const ItemFormName: FC<ItemFormNameProps> = ({item, errors}) => {
                     <span className='tw-text-red-400'>{item.mandatory ? ' *' : ''}</span> 
                 </span>
                 <span>
-                   {(errors?.data) && <ExclamationCircleIcon className="tw-h-5 tw-w-5 tw-text-red-500" aria-hidden="true"/>}
+                   {isError && <ExclamationCircleIcon className="tw-h-5 tw-w-5 tw-text-red-500" aria-hidden="true"/>}
                 </span>
             </div>
         </>

@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getUsersList } from "../../http/userAPI"
+import { getUsersList, createUser, editUser } from "../../http/userAPI"
 import { RootState } from "../store"
 import { toast } from "react-toastify"
  
-export const fetchUsers = createAsyncThunk<FetchUsersProps, {}, {rejectValue: string}>(
+export const fetchUsers = createAsyncThunk<FetchUsersProps, undefined, {rejectValue: string}>(
     'user/fetchUsers',
     async function(_, {rejectWithValue}) {
       try {
@@ -15,6 +15,37 @@ export const fetchUsers = createAsyncThunk<FetchUsersProps, {}, {rejectValue: st
       }
     }
 )
+
+export const addUser = createAsyncThunk<UserObj, object, {rejectValue: string}>(
+  'user/createUser',
+  async function(formData: object, {rejectWithValue}) {
+      try {
+        const response = await createUser(formData);
+        return response.data;
+      } catch (error: any) {
+        toast.error(error.response.data.message, { position: "top-center"})
+        return rejectWithValue(error.message)
+      }
+  }
+)
+
+export const changeUser = createAsyncThunk<UserObj, changeUserParams,{rejectValue: string}>(
+  'user/editUser',
+  async function(data, {rejectWithValue}) {
+      try {
+        const response = await editUser(data)
+        return response.data;
+      } catch (error: any) {
+        toast.error(error.response.data.message, { position: "top-center"})
+        return rejectWithValue(error.message)
+      }
+  }
+)
+
+export interface changeUserParams {
+  formData: object, 
+  id: string
+}
 
 interface FetchUsersProps {
     count: number,
@@ -75,6 +106,27 @@ const userSlice = createSlice({
           state.count = action.payload.count
         })
         .addCase(fetchUsers.rejected, (state) => {
+          state.loading = false
+        })
+
+        .addCase (addUser.pending, (state) => {
+          state.loading = true
+        })
+        .addCase (addUser.fulfilled, (state, action) => {
+          state.loading = false
+          state.usersList.push(action.payload)
+        })
+        .addCase (addUser.rejected, (state) => {
+          state.loading = false
+        })
+
+        .addCase (changeUser.pending, (state) => {
+          state.loading = true
+        })
+        .addCase (changeUser.fulfilled, (state, action) => {
+          state.loading = false
+        })
+        .addCase (changeUser.rejected, (state) => {
           state.loading = false
         })
     }

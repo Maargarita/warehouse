@@ -1,10 +1,12 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Tooltip } from 'react-tooltip'
 import { ItemFormName } from './ItemFormName'
+import { ItemFormInput } from './ItemFormInput'
+import { toast } from 'react-toastify'
 
 type ItemFormProps = {
-    onSubmitClick: (form: object) => void,
+    onSubmitClick: (form: object, id: string | null) => void,
     isEditMode: boolean,
     isLoading: boolean,
     columns: 
@@ -19,14 +21,24 @@ type ItemFormProps = {
 
 export const ItemForm: FC<ItemFormProps> = ({onSubmitClick, isEditMode, isLoading, columns, selectedItem}) => {
     const {
-        control,
         register,
         handleSubmit,
-        setValue,
-        resetField,
-        clearErrors,
         formState: { errors, isSubmitting, isValid },
     } = useForm()
+
+    useEffect(() => {
+        if (isSubmitting) {
+            if (!isValid || Object.keys(errors).length > 0)
+                toast.error('Не заполнено обязательное поле или введено некорректное значение!', { position: "top-center" })
+        }
+    }, [isSubmitting])
+
+    const handleSubmitClick = (form: object) => {
+        if (isEditMode)
+            onSubmitClick(form, selectedItem.id)
+        else 
+            onSubmitClick(form, null)
+    }
 
     return (
         <>
@@ -35,7 +47,7 @@ export const ItemForm: FC<ItemFormProps> = ({onSubmitClick, isEditMode, isLoadin
                     <div className='tw-flex tw-flex-row tw-gap-x-1'>
                         <button
                             className='tw-rounded-md tw-p-1.5 tw-text-white tw-bg-green-900 hover:tw-bg-green-700 disabled:tw-bg-gray-400'
-                            onClick={handleSubmit(onSubmitClick)}
+                            onClick={handleSubmit(handleSubmitClick)}
                             disabled={isLoading}
                             data-tooltip-id="item-form-tooltip" data-tooltip-content="Сохранить"
                         >
@@ -52,15 +64,23 @@ export const ItemForm: FC<ItemFormProps> = ({onSubmitClick, isEditMode, isLoadin
                 
                 <div className='tw-grow tw-p-4 tw-overflow-auto'>
                     { columns.map((column, index) => {
+                        let isError = errors && errors[column.fieldName]
                         return ((column.fieldName !== 'createdAt' && column.fieldName !== 'updatedAt') &&
                          <div key={index} className="tw-py-2 sm:tw-grid sm:tw-grid-cols-3 sm:tw-gap-4">
                                 <dt className="tw-text-sm tw-font-medium tw-text-gray-900 tw-flex tw-flex-row tw-items-center tw-gap-x-4">
                                     <ItemFormName
                                         item={column}
-                                        errors={errors}
+                                        isError={isError}
                                     />
                                 </dt>
                                 <dd className="tw-mt-1 tw-text-sm tw-text-gray-900 sm:tw-col-span-2 sm:tw-mt-0">
+                                    <ItemFormInput
+                                        isEditMode={isEditMode}
+                                        column={column}
+                                        selectedItem={selectedItem}
+                                        register={register}
+                                        isError={isError}
+                                    />
                                 </dd>
                             </div>
                         )}

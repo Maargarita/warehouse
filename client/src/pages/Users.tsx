@@ -2,7 +2,7 @@ import React, {FC, useEffect} from 'react'
 import { NavBar } from '../components/NavBar'
 import { AppDispatch } from '../store/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUsers, selectUser } from '../store/slices/userSlice'
+import { addUser, changeUser, fetchUsers, selectUser } from '../store/slices/userSlice'
 import { ItemsListContainer } from '../components/itemsList/ItemsListContainer'
 
 export const Users: FC = () => {
@@ -42,8 +42,15 @@ export const Users: FC = () => {
     ]
 
     useEffect(() => {
-        dispatch(fetchUsers({}))
+        dispatch(fetchUsers())
     }, [])
+
+    const onSubmitClick = (form: object, id: string | null) => {
+        if (id)
+            dispatch(changeUser({formData: form, id}))
+        else 
+            dispatch(addUser(form))
+    }
 
     return (
         <section className='tw-pb-4'>
@@ -52,6 +59,7 @@ export const Users: FC = () => {
                 list={usersList}
                 columns={userColumns}
                 isLoading={false}
+                onSubmitClick={onSubmitClick}
             />
         </section>
     )

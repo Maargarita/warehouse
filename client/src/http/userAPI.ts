@@ -1,4 +1,5 @@
 import { $authHost, $host } from "."
+import { changeUserParams } from "../store/slices/userSlice"
 
 export const login = async (login: string, password: string) => {
     const {data} = await $host.post('api/user/login', {login, password})
@@ -7,4 +8,12 @@ export const login = async (login: string, password: string) => {
 
 export const getUsersList = async () => {
     return await $authHost.get('api/user')
+}
+
+export const createUser = async (data: object) => {
+    return await $authHost.post('api/user', data)
+}
+
+export const editUser = async (data: changeUserParams) => {
+    return await $authHost.patch('api/user/' + data.id, data.formData)
 }
