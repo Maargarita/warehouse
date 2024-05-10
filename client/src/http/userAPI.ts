@@ -17,3 +17,7 @@ export const createUser = async (data: object) => {
 export const editUser = async (data: changeUserParams) => {
     return await $authHost.patch('api/user/' + data.id, data.formData)
 }
+
+export const removeUser = async (id: string) => {
+    return await $authHost.delete('api/user/' + id)
+}

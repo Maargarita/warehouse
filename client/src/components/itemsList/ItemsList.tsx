@@ -13,10 +13,11 @@ type ItemsListProps = {
         id: string
     }[],
     setSelectedItem: Dispatch<SetStateAction<{ id: string; }>>,
-    selectedItem: {id: string}
+    selectedItem: {id: string},
+    onDoubleClick: () => void
 }
 
-export const ItemsList: FC<ItemsListProps> = ({columns, list, setSelectedItem, selectedItem}) => {
+export const ItemsList: FC<ItemsListProps> = ({columns, list, setSelectedItem, selectedItem, onDoubleClick}) => {
     const defaultColumnSizes = columns.map(() => '150px').join(' ')
 
     return(
@@ -47,6 +48,7 @@ export const ItemsList: FC<ItemsListProps> = ({columns, list, setSelectedItem, s
                     }}
                     className={`hover:tw-bg-lime-200 ${selectedItem.id !== '' && item.id === selectedItem.id && 'tw-bg-lime-400'}`}
                     onClick={() => setSelectedItem(item)}
+                    onDoubleClick={onDoubleClick}
                 >
                     {columns.map((column, colIndex) => {
                         const value = getFieldValue(item[column.fieldName as keyof object], column.type)

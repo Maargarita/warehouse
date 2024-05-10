@@ -50,7 +50,7 @@ class UserController {
     async edit (request, response) {
         const {id} = request.params
         const user = await User.update(request.body, {where: {id}, returning: true})
-        return response.json(user[1])
+        return response.json(user[1][0])
     }
 
     async delete (request, response) {

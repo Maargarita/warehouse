@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { getUsersList, createUser, editUser } from "../../http/userAPI"
+import { getUsersList, createUser, editUser, removeUser } from "../../http/userAPI"
 import { RootState } from "../store"
 import { toast } from "react-toastify"
  
@@ -42,6 +42,18 @@ export const changeUser = createAsyncThunk<UserObj, changeUserParams,{rejectValu
   }
 )
 
+export const deleteUser = createAsyncThunk<any, string,{rejectValue: string}>(
+  'user/deleteUser',
+  async function(id, {rejectWithValue}) {
+      try {
+        await removeUser(id)
+        return id
+      } catch (error: any) {
+        toast.error(error.response.data.message, { position: "top-center"})
+        return rejectWithValue(error.message)
+      }
+  }
+)
 export interface changeUserParams {
   formData: object, 
   id: string
@@ -64,7 +76,8 @@ export interface UserObj {
 export interface UserSliseState {
     isAuth: boolean,
     user: UserObj,
-    loading: boolean,
+    isLoading: boolean,
+    isCloseForm: boolean,
     usersList: UserObj[],
     count: number
 }
@@ -79,7 +92,8 @@ const initialState: UserSliseState = {
         createdAt: '',
         updatedAt: ''
     },
-    loading: false,
+    isLoading: false,
+    isCloseForm: false,
     usersList: [],
     count: 0
 };  
@@ -93,45 +107,70 @@ const userSlice = createSlice({
         },
         setUser(state, action) {
             state.user = action.payload
+        },
+        seIsCloseForm(state, action) {
+          state.isCloseForm = action.payload
         }
     },
     extraReducers: (builder) => {
         builder
         .addCase(fetchUsers.pending, (state) => {
-          state.loading = true
+          state.isLoading = true
         })
         .addCase(fetchUsers.fulfilled, (state, action) => {
-          state.loading = false
+          state.isLoading = false
           state.usersList = action.payload.rows
           state.count = action.payload.count
         })
         .addCase(fetchUsers.rejected, (state) => {
-          state.loading = false
+          state.isLoading = false
         })
 
         .addCase (addUser.pending, (state) => {
-          state.loading = true
+          state.isLoading = true
         })
         .addCase (addUser.fulfilled, (state, action) => {
-          state.loading = false
+          state.isCloseForm = true
+          state.isLoading = false
           state.usersList.push(action.payload)
+          toast.success('Пользователь успешно создан', { position: "top-center"})
         })
         .addCase (addUser.rejected, (state) => {
-          state.loading = false
+          state.isLoading = false
         })
 
         .addCase (changeUser.pending, (state) => {
-          state.loading = true
+          state.isLoading = true
         })
         .addCase (changeUser.fulfilled, (state, action) => {
-          state.loading = false
+          state.isCloseForm = true
+          state.isLoading = false
+          state.usersList = state.usersList.map(user => {
+            if (user.id === action.payload.id) {
+              return action.payload
+            }
+
+            return user
+          })
+
+          toast.success('Информация о пользователе успешно изменена', { position: "top-center"})
         })
         .addCase (changeUser.rejected, (state) => {
-          state.loading = false
+          state.isLoading = false
+        })
+
+        .addCase (deleteUser.pending, (state) => {
+          state.isLoading = true
+        })
+        .addCase (deleteUser.fulfilled, (state, action) => {
+          state.usersList = state.usersList.filter(user => user.id !== action.payload)
+        })
+        .addCase (deleteUser.rejected, (state) => {
+          state.isLoading = false
         })
     }
 })
 
 export const selectUser = (state: RootState) => state.user;
-export const {changeUserAuth, setUser} = userSlice.actions
+export const {changeUserAuth, setUser, seIsCloseForm} = userSlice.actions
 export default userSlice.reducer

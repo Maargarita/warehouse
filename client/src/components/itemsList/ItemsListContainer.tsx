@@ -1,4 +1,4 @@
-import React, {FC, useRef, useState} from 'react'
+import React, {FC, useEffect, useRef, useState} from 'react'
 import { ItemsListHeader } from './ItemsListHeader'
 import { ItemsList } from './ItemsList'
 import { Tooltip } from 'react-tooltip'
@@ -17,10 +17,13 @@ export type ItemsListContainerProps = {
         id: string
     }[],
     isLoading: boolean,
-    onSubmitClick: (form: object, id: string | null) => void
+    isCloseForm: boolean,
+    onSubmitClick: (form: object, id: string | null) => void,
+    seIsCloseForm: (isClose: boolean) => void,
+    onDeleteItem: (id: string) => void
 }
 
-export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, isLoading, onSubmitClick}) => {
+export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, isLoading, isCloseForm, onSubmitClick, seIsCloseForm, onDeleteItem}) => {
     const tableElement = useRef<HTMLTableElement>(null)
     const headerElement = useRef<HTMLDivElement>(null)
     const sectionElement = useRef<HTMLDivElement>(null)
@@ -45,20 +48,28 @@ export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, 
     const onAddItemClick = () => {
         setIsOpen(true)
         setIsEditMode(false)
+        seIsCloseForm(false)
     }
 
     const onEditItemClick = () => {
         setIsOpen(true)
         setIsEditMode(true)
+        seIsCloseForm(false)
     }
 
     const onDeleteItemClick = (id: string) => {
-        console.log(id)
+        onDeleteItem(id)
     }
 
     const onCloseClick = () => {
         setIsOpen(false)
     }
+
+    useEffect(() => {
+        if (isCloseForm) {
+            setIsOpen(false)
+        }
+    }, [isCloseForm])
 
     return (
         <section className='tw-h-[calc(100vh-7rem)] tw-overflow-hidden tw-bg-white tw-m-4 tw-rounded-md tw-p-2'>
@@ -86,6 +97,7 @@ export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, 
                         list={list}
                         setSelectedItem={setSelectedItem}
                         selectedItem={selectedItem}
+                        onDoubleClick={onEditItemClick}
                     />
                 </table>  
             </div>
