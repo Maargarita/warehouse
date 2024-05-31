@@ -7,7 +7,8 @@ type ItemsListProps = {
         name: string,
         fieldName: string,
         type: string,
-        mandatory: boolean
+        mandatory: boolean,
+        createOnly: boolean
     }[],
     list: {
         id: string

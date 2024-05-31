@@ -11,7 +11,8 @@ export type ItemsListContainerProps = {
             name: string,
             fieldName: string,
             type: string,
-            mandatory: boolean
+            mandatory: boolean,
+            createOnly: boolean
         }[],
     list: {
         id: string
@@ -83,7 +84,7 @@ export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, 
                 />
             </div>
             <ItemsListHeader
-                columns={columns}
+                columns={columns.filter(item => !item.createOnly)}
                 tableElement={tableElement}
                 headerElement={headerElement}
                 isVerticalScroll={isVerticalScroll}
@@ -93,7 +94,7 @@ export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, 
             <div ref={sectionElement} className='tw-overflow-auto tw-h-[calc(100%-4rem)]'  onScroll={(e) => processTableScroll(e.target)}>
               <table ref={tableElement} className='tw-w-full tw-text-gray-900 tw-font-medium tw-text-sm'>
                     <ItemsList
-                        columns={columns}
+                        columns={columns.filter(item => !item.createOnly)}
                         list={list}
                         setSelectedItem={setSelectedItem}
                         selectedItem={selectedItem}

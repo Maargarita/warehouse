@@ -8,7 +8,8 @@ type ItemFormNameProps ={
             name: string,
             fieldName: string,
             type: string,
-            mandatory: boolean
+            mandatory: boolean,
+            createOnly: boolean
         },
     isError: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 }

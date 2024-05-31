@@ -14,7 +14,8 @@ type ItemFormProps = {
             name: string,
             fieldName: string,
             type: string,
-            mandatory: boolean
+            mandatory: boolean,
+            createOnly: boolean
         }[],
     selectedItem: {id: string}
 }

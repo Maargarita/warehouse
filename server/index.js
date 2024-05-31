@@ -14,7 +14,7 @@ app.use(express.json())
 app.use('/api', router)
 
 app.use(function (req, res, next) {
-    res.status(404).send("Sorry can't find that!")
+    res.status(404).send("Данные не найдены")
 })
 app.use(errorHandler)
 

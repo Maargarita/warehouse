@@ -14,7 +14,8 @@ type ItemContainerProps = {
             name: string,
             fieldName: string,
             type: string,
-            mandatory: boolean
+            mandatory: boolean,
+            createOnly: boolean
         }[],
     selectedItem: {id: string},
     onSubmitClick: (form: object, id: string | null) => void
@@ -81,7 +82,7 @@ export const ItemContainer: FC<ItemContainerProps> = ({isOpen, onCloseClick, isL
                                                             onSubmitClick={onSubmitClick}
                                                             isEditMode={isEditMode}
                                                             isLoading={isLoading}
-                                                            columns={columns}
+                                                            columns={isEditMode ? columns.filter(item => !item.createOnly) : columns}
                                                             selectedItem={selectedItem}
                                                         />
                                                     </div>

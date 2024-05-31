@@ -13,31 +13,36 @@ export const Users: FC = () => {
             name: 'Логин',
             fieldName: 'login',
             type: 'string',
-            mandatory: true
+            mandatory: true,
+            createOnly: false
         },
         {
             name: 'Пароль',
             fieldName: 'password',
             type: 'string',
-            mandatory: true
+            mandatory: true,
+            createOnly: true
         },
         {
             name: 'Роль',
             fieldName: 'role',
             type: 'string',
-            mandatory: true
+            mandatory: true,
+            createOnly: false
         },
         {
             name: 'Создан',
             fieldName: 'createdAt',
             type: 'date',
-            mandatory: false
+            mandatory: false,
+            createOnly: false
         },
         {
             name: 'Изменен',
             fieldName: 'updatedAt',
             type: 'date',
-            mandatory: false
+            mandatory: false,
+            createOnly: false
         }
     ]
 

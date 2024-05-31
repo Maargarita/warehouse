@@ -6,7 +6,8 @@ type ItemsListHeaderProps = {
         name: string,
         fieldName: string,
         type: string,
-        mandatory: boolean
+        mandatory: boolean,
+        createOnly: boolean
     }[],
     tableElement: RefObject<HTMLTableElement> | null
     headerElement: RefObject<HTMLDivElement> | null,
