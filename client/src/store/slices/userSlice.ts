@@ -165,6 +165,7 @@ const userSlice = createSlice({
         .addCase (deleteUser.fulfilled, (state, action) => {
           state.usersList = state.usersList.filter(user => user.id !== action.payload)
           state.isLoading = false
+          toast.success('Пользователь успешно удален', { position: "top-center"})
         })
         .addCase (deleteUser.rejected, (state) => {
           state.isLoading = false
@@ -172,6 +173,6 @@ const userSlice = createSlice({
     }
 })
 
-export const selectUser = (state: RootState) => state.user;
+export const selectUser = (state: RootState) => state.user
 export const {changeUserAuth, setUser, seIsCloseForm} = userSlice.actions
 export default userSlice.reducer

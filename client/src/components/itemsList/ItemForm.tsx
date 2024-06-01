@@ -4,19 +4,13 @@ import { Tooltip } from 'react-tooltip'
 import { ItemFormName } from './ItemFormName'
 import { ItemFormInput } from './ItemFormInput'
 import { toast } from 'react-toastify'
+import { columnsProps } from './ItemContainer'
 
 type ItemFormProps = {
     onSubmitClick: (form: object, id: string | null) => void,
     isEditMode: boolean,
     isLoading: boolean,
-    columns: 
-        {
-            name: string,
-            fieldName: string,
-            type: string,
-            mandatory: boolean,
-            createOnly: boolean
-        }[],
+    columns: columnsProps[],
     selectedItem: {id: string}
 }
 
@@ -25,6 +19,7 @@ export const ItemForm: FC<ItemFormProps> = ({onSubmitClick, isEditMode, isLoadin
         register,
         handleSubmit,
         formState: { errors, isSubmitting, isValid },
+        control
     } = useForm()
 
     useEffect(() => {
@@ -81,6 +76,7 @@ export const ItemForm: FC<ItemFormProps> = ({onSubmitClick, isEditMode, isLoadin
                                         selectedItem={selectedItem}
                                         register={register}
                                         isError={isError}
+                                        control={control}
                                     />
                                 </dd>
                             </div>

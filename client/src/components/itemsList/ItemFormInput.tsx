@@ -1,24 +1,19 @@
 import React, { FC } from 'react'
-import { getFieldValue } from '../../utils/functionst'
-import {UseFormRegister, FieldValues, FieldError, Merge, FieldErrorsImpl } from 'react-hook-form'
+import { getEnumFiledValue, getFieldValue, setEnumFiledValue } from '../../utils/functionst'
+import {UseFormRegister, FieldValues, FieldError, Merge, FieldErrorsImpl, Controller, Control } from 'react-hook-form'
+import { columnsProps } from './ItemContainer'
+import { EnumInput } from '../inputs/EnumInput'
 
 type ItemFormInputProps = {
     isEditMode: boolean,
-    column: 
-        {
-            name: string,
-            fieldName: string,
-            type: string,
-            mandatory: boolean,
-            createOnly: boolean
-        },
+    column: columnsProps,
     selectedItem: {id: string},
     register:  UseFormRegister<FieldValues>,
-    isError: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
+    isError: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined,
+    control: Control<FieldValues>
 }
 
-export const ItemFormInput: FC<ItemFormInputProps> = ({isEditMode, column, selectedItem, register, isError}) => {
-
+export const ItemFormInput: FC<ItemFormInputProps> = ({isEditMode, column, selectedItem, register, isError, control}) => {
     return (
         <>
             { column.type === 'int' &&
@@ -69,6 +64,28 @@ export const ItemFormInput: FC<ItemFormInputProps> = ({isEditMode, column, selec
                         value: isEditMode ? getFieldValue(selectedItem[column.fieldName as keyof object], column.type) : "",
                     })} 
                 />
+            }
+            { column.type === 'enum' &&
+                <div className='tw-flex tw-flex-row tw-items-center tw-w-full'>
+                    <div className='tw-grow'>
+                        <Controller
+                            name={column.fieldName}
+                            control={control}
+                            rules={ {required: column.mandatory} }
+                            defaultValue={isEditMode ? getEnumFiledValue(selectedItem, column) : {id: null, name: ''}}
+                            render={({field}) =>{
+                                return <EnumInput
+                                    itemList={column.options}
+                                    selectedItem={field.value}
+                                    onItemChange={(e) => {field.onChange(setEnumFiledValue(e, column))}}
+                                    isError={isError}
+                                    id={column.fieldName}
+                                    column={column}
+                                />}
+                            }
+                        />
+                    </div>
+                </div>
             }
         </>
     )

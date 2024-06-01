@@ -1,16 +1,28 @@
-import React, {FC} from 'react'
+import React, {FC, useEffect} from 'react'
 import { NavBar } from '../components/NavBar'
 import { ItemsListContainer } from '../components/itemsList/ItemsListContainer'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../store/store'
+import { addStorekeeper, changeStorekeeper, deleteStorekeeper, fetchStorekeepers, seIsCloseForm, selectStorekeeper } from '../store/slices/storekeeperSlice'
+import { fetchUsers, selectUser } from '../store/slices/userSlice'
+
+export interface StorekeeperFormObj {
+    surname: string,
+    name: string,
+    patronymic: string, 
+    phone: string, 
+    userId: string,
+    warehoueseId?: string
+}
 
 export const Storekeepers: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
-    // const { usersList, isLoading, isCloseForm } = useSelector(selectUser)
-    const userColumns = [
+    const { storekeepersList, isLoading, isCloseForm } = useSelector(selectStorekeeper)
+    const { usersList } = useSelector(selectUser)
+    const storekeeperColumns = [
         {
             name: 'Фамилия',
-            fieldName: 'surnamr',
+            fieldName: 'surname',
             type: 'string',
             mandatory: true,
             createOnly: false
@@ -33,6 +45,23 @@ export const Storekeepers: FC = () => {
             name: 'Телефон',
             fieldName: 'phone',
             type: 'string',
+            mandatory: true,
+            createOnly: false
+        },
+        {
+            name: 'Пользователь',
+            fieldName: 'user_login',
+            type: 'enum',
+            mandatory: false,
+            createOnly: false,
+            options: usersList,
+            optionsNameField: 'login',
+            optionsIdField: 'userId'
+        },
+        {
+            name: 'Склад',
+            fieldName: 'warehouse_address',
+            type: 'string',
             mandatory: false,
             createOnly: false
         },
@@ -52,37 +81,46 @@ export const Storekeepers: FC = () => {
         }
     ]
 
-    // useEffect(() => {
-    //     dispatch(fetchStorekeepers())
-    // }, [])
+    const onSubmitClick = (form: any, id: string | null) => {
+        const storekeeper: StorekeeperFormObj = {
+            name: form.name,
+            patronymic: form.patronymic,
+            phone: form.phone,
+            surname: form.surname,
+            userId: form['user_login'].id,
+            // warehoueseId
+        }
+        if (id)
+            dispatch(changeStorekeeper({formData: storekeeper, id}))
+        else 
+            dispatch(addStorekeeper(storekeeper))
+    }
 
-    // const onSubmitClick = (form: object, id: string | null) => {
-    //     if (id)
-    //         dispatch(changeStorekeeper({formData: form, id}))
-    //     else 
-    //         dispatch(addStorekeeper(form))
-    // }
-
-    // const handleCloseForm = (isCloseForm: boolean) => {
-    //     dispatch(seIsCloseForm(isCloseForm))
-    // }
+    const handleCloseForm = (isCloseForm: boolean) => {
+        dispatch(seIsCloseForm(isCloseForm))
+    }
     
-    // const onDeleteItem = (id: string) => {
-    //     dispatch(deleteStorekeeper(id))
-    // }
+    const onDeleteItem = (id: string) => {
+        dispatch(deleteStorekeeper(id))
+    }
+    
+    useEffect(() => {
+        dispatch(fetchStorekeepers())
+        dispatch(fetchUsers())
+    }, [])
 
     return (
         <section className='tw-pb-4'>
             <NavBar/>
-            {/* <ItemsListContainer
-                list={usersList}
-                columns={userColumns}
+            <ItemsListContainer
+                list={storekeepersList}
+                columns={storekeeperColumns}
                 isLoading={isLoading}
                 isCloseForm={isCloseForm}
                 onSubmitClick={onSubmitClick}
                 seIsCloseForm={handleCloseForm}
                 onDeleteItem={onDeleteItem}
-            /> */}
+            />
         </section>
     )
 }

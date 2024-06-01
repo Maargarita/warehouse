@@ -3,17 +3,10 @@ import { ItemsListHeader } from './ItemsListHeader'
 import { ItemsList } from './ItemsList'
 import { Tooltip } from 'react-tooltip'
 import { ItemsListMenu } from './ItemsListMenu'
-import { ItemContainer } from './ItemContainer'
+import { ItemContainer, columnsProps } from './ItemContainer'
 
 export type ItemsListContainerProps = {
-    columns: 
-        {
-            name: string,
-            fieldName: string,
-            type: string,
-            mandatory: boolean,
-            createOnly: boolean
-        }[],
+    columns: columnsProps[],
     list: {
         id: string
     }[],

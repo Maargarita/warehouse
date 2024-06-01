@@ -1,4 +1,5 @@
 import { format } from "date-fns"
+import { columnsProps } from "../components/itemsList/ItemContainer";
 
 export const getFieldValue = (field: any, type: string) => {
     switch(type) {
@@ -31,4 +32,14 @@ export const getFormattedDate = (date: string, formatStr: string) => {
             }
         } else return 'Неизвестный формат записи'
     } else return ''
+}
+
+export const getEnumFiledValue = (field: any, column: columnsProps) => {
+    return field[column.fieldName as keyof object] 
+        ? {id: field[column.optionsIdField as keyof object], name: field[column.fieldName as keyof object]} : {id: null, name: ''}
+}
+
+export const setEnumFiledValue = (value: any, column: columnsProps) => {
+    return value[column.optionsNameField as keyof object] 
+        ? {id: value.id, name: value[column.optionsNameField as keyof object]} : {id: null, name: ''}
 }

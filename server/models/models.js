@@ -13,7 +13,7 @@ const Storekeeper = sequelize.define('storekeeper', {
     surname: {type: DataTypes.STRING, allowNull: false},
     name: {type: DataTypes.STRING, allowNull: false},
     patronymic: {type: DataTypes.STRING},
-    phone: {type: DataTypes.STRING, unique: true}
+    phone: {type: DataTypes.STRING, unique: true, allowNull: false}
 })
 
 const Warehouse = sequelize.define('warehouse', {

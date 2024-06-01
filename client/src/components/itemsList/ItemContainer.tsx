@@ -4,19 +4,23 @@ import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Dialog, Transition } from '@headlessui/react'
 import { ItemForm } from './ItemForm'
 
+export type columnsProps = {
+    name: string,
+    fieldName: string,
+    type: string,
+    mandatory: boolean,
+    createOnly: boolean,
+    options?: {}[],
+    optionsNameField?: string,
+    optionsIdField?: string
+}
+
 type ItemContainerProps = {
     isOpen: boolean,
     onCloseClick: () => void,
     isLoading: boolean,
     isEditMode: boolean,
-    columns: 
-        {
-            name: string,
-            fieldName: string,
-            type: string,
-            mandatory: boolean,
-            createOnly: boolean
-        }[],
+    columns: columnsProps[],
     selectedItem: {id: string},
     onSubmitClick: (form: object, id: string | null) => void
 }

@@ -46,10 +46,6 @@ export const Users: FC = () => {
         }
     ]
 
-    useEffect(() => {
-        dispatch(fetchUsers())
-    }, [])
-
     const onSubmitClick = (form: object, id: string | null) => {
         if (id)
             dispatch(changeUser({formData: form, id}))
@@ -64,6 +60,10 @@ export const Users: FC = () => {
     const onDeleteItem = (id: string) => {
         dispatch(deleteUser(id))
     }
+    
+    useEffect(() => {
+        dispatch(fetchUsers())
+    }, [])
 
     return (
         <section className='tw-pb-4'>

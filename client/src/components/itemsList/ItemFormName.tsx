@@ -1,16 +1,10 @@
 import React, { FC } from 'react'
 import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
-import { FieldError, FieldErrors, FieldErrorsImpl, FieldValues, Merge } from 'react-hook-form'
+import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form'
+import { columnsProps } from './ItemContainer'
 
 type ItemFormNameProps ={
-    item: 
-        {
-            name: string,
-            fieldName: string,
-            type: string,
-            mandatory: boolean,
-            createOnly: boolean
-        },
+    item: columnsProps,
     isError: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 }
 

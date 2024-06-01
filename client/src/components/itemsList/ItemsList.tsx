@@ -1,15 +1,9 @@
 import React, {Dispatch, FC, Fragment, SetStateAction} from 'react'
 import { getFieldValue } from '../../utils/functionst'
+import { columnsProps } from './ItemContainer';
 
 type ItemsListProps = {
-    columns: 
-    {
-        name: string,
-        fieldName: string,
-        type: string,
-        mandatory: boolean,
-        createOnly: boolean
-    }[],
+    columns: columnsProps[],
     list: {
         id: string
     }[],
@@ -52,7 +46,7 @@ export const ItemsList: FC<ItemsListProps> = ({columns, list, setSelectedItem, s
                     onDoubleClick={onDoubleClick}
                 >
                     {columns.map((column, colIndex) => {
-                        const value = getFieldValue(item[column.fieldName as keyof object], column.type)
+                        const value = getFieldValue(item[column?.fieldName as keyof object], column.type)
                         return (<td 
                                 key={colIndex}
                                 className='tw-overflow-hidden tw-truncate tw-select-none tw-text-left tw-pl-5 tw-pr-6 tw-py-0.5 tw-text-sm tw-border-r tw-border-gray-400'

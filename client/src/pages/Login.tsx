@@ -40,7 +40,10 @@ export const LogIn: FC = () => {
             navigate(paths.PRODUCTS_ROUTE)
         } catch (error: any) {
             clearTimeout(noResponse)
-            toast.error(error.response.data.message, { position: "top-center"})
+            if (error.response)        
+                toast.error(error.response.data?.message, { position: "top-center"})
+            else
+                toast.error('Сервис не отвечает', { position: "top-center"})
         }
     }
 

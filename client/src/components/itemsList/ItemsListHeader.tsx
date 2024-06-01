@@ -1,14 +1,9 @@
 import { ChevronDoubleUpIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/20/solid'
 import React, {FC, RefObject, useCallback, useEffect, useState} from 'react'
+import { columnsProps } from './ItemContainer'
 
 type ItemsListHeaderProps = {
-    columns: {
-        name: string,
-        fieldName: string,
-        type: string,
-        mandatory: boolean,
-        createOnly: boolean
-    }[],
+    columns: columnsProps[],
     tableElement: RefObject<HTMLTableElement> | null
     headerElement: RefObject<HTMLDivElement> | null,
     isVerticalScroll: boolean,
