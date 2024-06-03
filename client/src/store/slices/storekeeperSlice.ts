@@ -20,7 +20,7 @@ export const addStorekeeper = createAsyncThunk<StorekeeperObj, object, {rejectVa
   'storekeeper/createStorekeeper',
   async function(formData: object, {rejectWithValue}) {
       try {
-        const response = await createStorekeeper(formData);
+        const response = await createStorekeeper(formData)
         return response.data
       } catch (error: any) {
         toast.error(error.response.data.message, { position: "top-center"})

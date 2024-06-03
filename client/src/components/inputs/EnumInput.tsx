@@ -5,7 +5,7 @@ import { columnsProps } from '../itemsList/ItemContainer'
 import { FieldError, FieldErrorsImpl, Merge } from 'react-hook-form'
 
 type EnumInputProps = {
-    itemList: {}[] | undefined,
+    itemList: {id: string}[] | undefined,
     selectedItem: {id: string, name: string},
     onItemChange: (e: any) => void,
     id: string,
@@ -86,19 +86,14 @@ export const EnumInput: FC<EnumInputProps> = ({itemList, selectedItem, onItemCha
                                 }
                                 value={item}
                             >
-                            {({ selected }) => (
-                                <>
-                                    <span className={`tw-block ${selected ? 'tw-font-semibold' : 'tw-font-normal' }`}
-                                    >
-                                        {item[column.optionsNameField as keyof object]}
+                                <span className={`tw-block ${(item.id === selectedItem.id) ? 'tw-font-semibold' : 'tw-font-normal' }`}>
+                                    {item[column.optionsNameField as keyof object]}
+                                </span>
+                                {(item.id === selectedItem.id) && (
+                                    <span className="tw-absolute tw-inset-y-0 tw-left-0 tw-flex tw-items-center tw-pl-3">
+                                        <CheckIcon className="tw-h-5 tw-w-5" aria-hidden="true" />
                                     </span>
-                                    {selected ? (
-                                        <span className="tw-absolute tw-inset-y-0 tw-left-0 tw-flex tw-items-center tw-pl-3">
-                                            <CheckIcon className="tw-h-5 tw-w-5" aria-hidden="true" />
-                                        </span>
-                                    ) : null}
-                                </>
-                            )}
+                                ) }
                             </Listbox.Option>
                         })}
                     </Listbox.Options>

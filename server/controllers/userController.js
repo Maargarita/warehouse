@@ -3,6 +3,7 @@ const {randomUUID} = require("crypto")
 const ApiError = require("../error/ApiError")
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { Op } = require('sequelize')
 
 class UserController {
     async create (request, response, next) {
@@ -70,6 +71,11 @@ class UserController {
     async edit (request, response, next) {
         const {id} = request.params
         try {
+            const candidate = await User.findOne({where: {id: {[Op.not]: request.body.id}, login: request.body.login}})
+            if (candidate) {
+                return next(ApiError.conflict('Пользователь с таким логином уже существует'))
+            }
+
             const user = await User.update(request.body, {where: {id}, returning: true})
             
             if (!user[1][0]) {

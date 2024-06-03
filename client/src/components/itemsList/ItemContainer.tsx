@@ -10,7 +10,7 @@ export type columnsProps = {
     type: string,
     mandatory: boolean,
     createOnly: boolean,
-    options?: {}[],
+    options?: {id: string}[],
     optionsNameField?: string,
     optionsIdField?: string
 }

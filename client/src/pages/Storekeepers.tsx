@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch } from '../store/store'
 import { addStorekeeper, changeStorekeeper, deleteStorekeeper, fetchStorekeepers, seIsCloseForm, selectStorekeeper } from '../store/slices/storekeeperSlice'
 import { fetchUsers, selectUser } from '../store/slices/userSlice'
+import { fetchWarehouses, selectWarehouse } from '../store/slices/warehouseSlice'
 
 export interface StorekeeperFormObj {
     surname: string,
@@ -12,13 +13,14 @@ export interface StorekeeperFormObj {
     patronymic: string, 
     phone: string, 
     userId: string,
-    warehoueseId?: string
+    warehouseId: string
 }
 
 export const Storekeepers: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { storekeepersList, isLoading, isCloseForm } = useSelector(selectStorekeeper)
     const { usersList } = useSelector(selectUser)
+    const { warehousesList } = useSelector(selectWarehouse)
     const storekeeperColumns = [
         {
             name: 'Фамилия',
@@ -61,9 +63,12 @@ export const Storekeepers: FC = () => {
         {
             name: 'Склад',
             fieldName: 'warehouse_address',
-            type: 'string',
+            type: 'enum',
             mandatory: false,
-            createOnly: false
+            createOnly: false,
+            options: warehousesList,
+            optionsNameField: 'address',
+            optionsIdField: 'warehouseId'
         },
         {
             name: 'Создан',
@@ -88,8 +93,9 @@ export const Storekeepers: FC = () => {
             phone: form.phone,
             surname: form.surname,
             userId: form['user_login'].id,
-            // warehoueseId
+            warehouseId: form['warehouse_address'].id,
         }
+
         if (id)
             dispatch(changeStorekeeper({formData: storekeeper, id}))
         else 
@@ -107,6 +113,7 @@ export const Storekeepers: FC = () => {
     useEffect(() => {
         dispatch(fetchStorekeepers())
         dispatch(fetchUsers())
+        dispatch(fetchWarehouses())
     }, [])
 
     return (
