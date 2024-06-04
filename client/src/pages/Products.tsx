@@ -6,6 +6,14 @@ import { AppDispatch } from '../store/store'
 import { addProduct, changeProduct, deleteProduct, fetchProducts, seIsCloseForm, selectProduct } from '../store/slices/productSlice'
 import { fetchWarehouses, selectWarehouse } from '../store/slices/warehouseSlice'
 
+type ProductFormObj = {
+    article_number: string,
+    name: string,
+    in_stock: number,
+    warehouse_space: number,
+    warehouseId: string
+}
+
 export const Products: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { productsList, isLoading, isCloseForm } = useSelector(selectProduct)
@@ -39,16 +47,16 @@ export const Products: FC = () => {
             mandatory: false,
             createOnly: false
         },
-        // {
-        //     name: 'Склад',
-        //     fieldName: 'warehouse_address',
-        //     type: 'enum',
-        //     mandatory: false,
-        //     createOnly: false,
-        //     options: warehousesList,
-        //     optionsNameField: 'address',
-        //     optionsIdField: 'warehouseId'
-        // },
+        {
+            name: 'Склад',
+            fieldName: 'warehouse_address',
+            type: 'enum',
+            mandatory: false,
+            createOnly: false,
+            options: warehousesList,
+            optionsNameField: 'address',
+            optionsIdField: 'warehouseId'
+        },
         {
             name: 'Создан',
             fieldName: 'createdAt',
@@ -66,19 +74,18 @@ export const Products: FC = () => {
     ]
 
     const onSubmitClick = (form: any, id: string | null) => {
-        // const storekeeper: StorekeeperFormObj = {
-        //     name: form.name,
-        //     patronymic: form.patronymic,
-        //     phone: form.phone,
-        //     surname: form.surname,
-        //     userId: form['user_login'].id,
-        //     warehouseId: form['warehouse_address'].id,
-        // }
+        const product: ProductFormObj = {
+            article_number: form.article_number,
+            name: form.name,
+            in_stock: form.in_stock,
+            warehouse_space: form.warehouse_space,
+            warehouseId: form['warehouse_address'].id,
+        }
 
         if (id)
-            dispatch(changeProduct({formData: form, id}))
+            dispatch(changeProduct({formData: product, id}))
         else 
-            dispatch(addProduct(form))
+            dispatch(addProduct(product))
     }
 
     const handleCloseForm = (isCloseForm: boolean) => {

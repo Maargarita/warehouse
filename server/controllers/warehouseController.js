@@ -27,7 +27,6 @@ class WarehouseController {
             }
             
             const createdWarehouse = await Warehouse.create(warehouse)
-
             return response.json(createdWarehouse)
         } catch (error) {
             return next(ApiError.internal('Непредвиденная ошибка', error))
@@ -57,7 +56,13 @@ class WarehouseController {
     async edit (request, response, next) {
         const {id} = request.params
         try {
-            const candidate = await Warehouse.findOne({where: {id: {[Op.not]: request.body.id}, address: request.body.address}})
+
+            const warehouse = await Warehouse.findOne({where: {id}})
+            if (!warehouse) {
+                return next(ApiError.notFound('Склад не найден'))
+            }
+
+            const candidate = await Warehouse.findOne({where: {id: {[Op.not]: id}, address: request.body.address}})
             if (candidate) {
                 return next(ApiError.conflict('Склад с таким адресом уже существует'))
             }
@@ -70,13 +75,8 @@ class WarehouseController {
                 return next(ApiError.badRequest('Объем занятого места на складе не может быть меньше нуля'))
             }
 
-            const warehouse = await Warehouse.update(request.body, {where: {id}, returning: true})
-            
-            if (!warehouse[1][0]) {
-                return next(ApiError.notFound('Склад не найден'))
-            }
-
-            return response.json(warehouse[1][0])
+            const newWarehouse = await Warehouse.update(request.body, {where: {id}, returning: true})
+            return response.json(newWarehouse[1][0])
         } catch (error) {
             return next(ApiError.internal('Непредвиденная ошибка', error))
         }
@@ -86,7 +86,6 @@ class WarehouseController {
         const {id} = request.params
         try {
             const warehouse = await Warehouse.findOne({where: {id}})
-
             if (!warehouse) {
                 return next(ApiError.notFound('Склад не найден'))
             }

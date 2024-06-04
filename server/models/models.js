@@ -23,17 +23,22 @@ const Warehouse = sequelize.define('warehouse', {
     occupied: {type: DataTypes.FLOAT(2), defaultValue: 0}
 })
 
-const ProductWarehouse = sequelize.define('product_warehouse', {
-    id: {type: DataTypes.STRING, primaryKey: true},
-})
-
 const Product = sequelize.define('product', {
-    id: {type: DataTypes.STRING, primaryKey: true},
-    article_number: {type: DataTypes.STRING, allowNull: false},
-    name: {type: DataTypes.STRING, allowNull: false},
-    in_stock: {type: DataTypes.INTEGER, defaultValue: 0}, 
-    warehouse_space: {type: DataTypes.FLOAT(2), defaultValue: 0}
-})
+        id: {type: DataTypes.STRING, primaryKey: true},
+        article_number: {type: DataTypes.STRING, allowNull: false},
+        name: {type: DataTypes.STRING, allowNull: false},
+        in_stock: {type: DataTypes.INTEGER, defaultValue: 0}, 
+        warehouse_space: {type: DataTypes.FLOAT(2), defaultValue: 0}
+    },
+    {
+        indexes: [
+            {
+                unique: true,
+                fields: ['article_number', 'warehouseId']
+            }
+        ]
+    }
+)
 
 User.hasOne(Storekeeper)
 Storekeeper.belongsTo(User)
@@ -41,13 +46,12 @@ Storekeeper.belongsTo(User)
 Warehouse.hasMany(Storekeeper)
 Storekeeper.belongsTo(Warehouse)
 
-Warehouse.belongsToMany(Product, {through: ProductWarehouse})
-Product.belongsToMany(Warehouse, {through: ProductWarehouse})
+Warehouse.hasMany(Product)
+Product.belongsTo(Warehouse)
 
 module.exports = {
     User,
     Storekeeper,
     Warehouse,
-    Product,
-    ProductWarehouse
+    Product
 }

@@ -37,7 +37,6 @@ class UserController {
         const {id} = request.params
         try {
             const user = await User.findOne({attributes: ['id', 'login', 'role', 'createdAt', 'updatedAt'], where: {id}})
-            
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
             }
@@ -71,18 +70,18 @@ class UserController {
     async edit (request, response, next) {
         const {id} = request.params
         try {
-            const candidate = await User.findOne({where: {id: {[Op.not]: request.body.id}, login: request.body.login}})
+            const user = await User.findOne({where: {id}})
+            if (!user) {
+                return next(ApiError.notFound('Пользователь не найден'))
+            }
+
+            const candidate = await User.findOne({where: {id: {[Op.not]: id}, login: request.body.login}})
             if (candidate) {
                 return next(ApiError.conflict('Пользователь с таким логином уже существует'))
             }
 
-            const user = await User.update(request.body, {where: {id}, returning: true})
-            
-            if (!user[1][0]) {
-                return next(ApiError.notFound('Пользователь не найден'))
-            }
-
-            return response.json(user[1][0])
+            const newUser = await User.update(request.body, {where: {id}, returning: true})
+            return response.json({id: newUser[1][0]?.id, login: newUser[1][0]?.login, role: newUser[1][0]?.role, createdAt: newUser[1][0]?.createdAt, updatedAt: newUser[1][0]?.updatedAt})
         } catch (error) {
             return next(ApiError.internal('Непредвиденная ошибка', error))
         }
@@ -92,7 +91,6 @@ class UserController {
         const {id} = request.params
         try {
             const user = await User.findOne({where: {id}})
-
             if (!user) {
                 return next(ApiError.notFound('Пользователь не найден'))
             }

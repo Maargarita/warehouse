@@ -10,7 +10,6 @@ class StorekeeperController {
         try {
             if (userId) {
                 const user = await User.findOne({where: {id: userId}})
-                
                 if (!user) {
                     return next(ApiError.notFound('Пользователь не найден'))
                 }
@@ -18,7 +17,6 @@ class StorekeeperController {
 
             if (warehouseId) {
                 const warehouse = await Warehouse.findOne({where: {id: warehouseId}})
-                
                 if (!warehouse) {
                     return next(ApiError.notFound('Склад не найден'))
                 }
@@ -49,11 +47,7 @@ class StorekeeperController {
                         [Sequelize.col('warehouse.address'), "warehouse_address"]
                     ]
                 }   
-                })
-
-            if (!storekeeper) {
-                return next(ApiError.notFound('Кладовщик не найден'))
-            }
+            })
 
             return response.json(storekeeper)
         } catch (error) {
@@ -93,9 +87,13 @@ class StorekeeperController {
     async edit (request, response, next) {
         const {id} = request.params
         try {
+            const storekeeper = await Storekeeper.findOne({where: {id}})
+            if (!storekeeper) {
+                return next(ApiError.notFound('Кладовщик не найден'))
+            }
+
             if (request.body.userId) {
                 const user = await User.findOne({where: {id: request.body.userId}})
-                
                 if (!user) {
                     return next(ApiError.notFound('Пользователь не найден'))
                 }
@@ -103,7 +101,6 @@ class StorekeeperController {
 
             if (request.body.warehouseId) {
                 const warehouse = await Warehouse.findOne({where: {id: request.body.warehouseId}})
-                
                 if (!warehouse) {
                     return next(ApiError.notFound('Склад не найден'))
                 }
@@ -114,8 +111,8 @@ class StorekeeperController {
                 return next(ApiError.conflict('Кладовщик с таким номером телефона уже существует'))
             }
 
-            await Storekeeper.update(request.body, {where: {id}, returning: true})
-            const storekeeper = await Storekeeper.findOne({where: {id},
+            await Storekeeper.update(request.body, {where: {id}})
+            const newStorekeeper = await Storekeeper.findOne({where: {id},
                 include: [
                     { 
                         model: User,
@@ -136,11 +133,7 @@ class StorekeeperController {
                 }   
             })
 
-            if (!storekeeper) {
-                return next(ApiError.notFound('Кладовщик не найден'))
-            }
-
-            return response.json(storekeeper)
+            return response.json(newStorekeeper)
         } catch (error) {
             return next(ApiError.internal('Непредвиденная ошибка', error))
         }
@@ -150,7 +143,6 @@ class StorekeeperController {
         const {id} = request.params
         try {
             const storekeeper = await Storekeeper.findOne({where: {id}})
-            
             if (!storekeeper) {
                 return next(ApiError.notFound('Кладовщик не найден'))
             }
