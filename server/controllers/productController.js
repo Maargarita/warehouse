@@ -54,7 +54,7 @@ class ProductController {
     }
 
     async getAll (request, response, next) {
-        let {limit, offset} = request.query
+        let {limit, offset, field, order} = request.query
         try {
             const products = await Product.findAndCountAll({limit, offset,
                 include: [
@@ -68,7 +68,10 @@ class ProductController {
                     include: [
                         [Sequelize.col('warehouse.address'), "warehouse_address"]
                     ]
-                }   
+                }, 
+                order: [
+                    [field, order]
+                ] 
             })
             return response.json(products)
         } catch (error) {

@@ -47,14 +47,14 @@ export const ItemsList: FC<ItemsListProps> = ({columns, list, setSelectedItem, s
                 >
                     {columns.map((column, colIndex) => {
                         const value = getFieldValue(item[column?.fieldName as keyof object], column.type)
-                        return (<td 
+                        return <td 
                                 key={colIndex}
                                 className='tw-overflow-hidden tw-truncate tw-select-none tw-text-left tw-pl-5 tw-pr-6 tw-py-0.5 tw-text-sm tw-border-r tw-border-gray-400'
                                 data-tooltip-id="items-list-tooltip" data-tooltip-content={value?.toString().trim()} data-tooltip-delay-show={1000}
                             >
                                 {value}
                             </td>
-                        )}
+                        }
                     )}
                 </tr>
             </Fragment>

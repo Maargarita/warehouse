@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import { NavBar } from '../components/NavBar'
 import { AppDispatch } from '../store/store'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,8 @@ import { ItemsListContainer } from '../components/itemsList/ItemsListContainer'
 export const Users: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { usersList, isLoading, isCloseForm } = useSelector(selectUser)
+    const [sortingDirection, setSortingDirection] = useState('ASC')
+    const [sortingColumn, setSortingColumn] = useState('login')
     const userColumns = [
         {
             name: 'Логин',
@@ -60,9 +62,16 @@ export const Users: FC = () => {
     const onDeleteItem = (id: string) => {
         dispatch(deleteUser(id))
     }
+
+    const onSortClick = (field: string) => {
+        const direction = sortingDirection == 'ASC' ? 'DESC': 'ASC'
+        setSortingColumn(field)
+        setSortingDirection(direction)
+        dispatch(fetchUsers({field: field, order: direction}))
+    }
     
     useEffect(() => {
-        dispatch(fetchUsers())
+        dispatch(fetchUsers({field: 'login', order: 'ASC'}))
     }, [])
 
     return (
@@ -76,6 +85,9 @@ export const Users: FC = () => {
                 onSubmitClick={onSubmitClick}
                 seIsCloseForm={handleCloseForm}
                 onDeleteItem={onDeleteItem}
+                sortingDirection={sortingDirection}
+                sortingColumn={sortingColumn}
+                onSortClick={onSortClick}
             />
         </section>
     )

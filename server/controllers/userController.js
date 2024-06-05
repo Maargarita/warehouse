@@ -24,9 +24,14 @@ class UserController {
     }
 
     async getAll (request, response, next) {
-        let {limit, offset} = request.query
+        let {limit, offset, field, order} = request.query
         try {
-            const users = await User.findAndCountAll({attributes: ['id', 'login', 'role', 'createdAt', 'updatedAt'], limit, offset})
+            const users = await User.findAndCountAll({limit, offset,
+                attributes: ['id', 'login', 'role', 'createdAt', 'updatedAt'], 
+                order: [
+                    [field, order]
+                ]
+            })
             return response.json(users)
         } catch (error) {
             return next(ApiError.internal('Непредвиденная ошибка', error))

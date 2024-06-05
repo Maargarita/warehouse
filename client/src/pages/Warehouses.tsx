@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import { NavBar } from '../components/NavBar'
 import { ItemsListContainer } from '../components/itemsList/ItemsListContainer'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,6 +8,8 @@ import { addWarehouse, changeWarehouse, deleteWarehouse, fetchWarehouses, seIsCl
 export const Warehouses: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { warehousesList, isLoading, isCloseForm } = useSelector(selectWarehouse)
+    const [sortingDirection, setSortingDirection] = useState('ASC')
+    const [sortingColumn, setSortingColumn] = useState('address')
     const warehouseColumns = [
         {
             name: 'Адрес',
@@ -61,8 +63,15 @@ export const Warehouses: FC = () => {
         dispatch(deleteWarehouse(id))
     }
     
+    const onSortClick = (field: string) => {
+        const direction = sortingDirection == 'ASC' ? 'DESC': 'ASC'
+        setSortingColumn(field)
+        setSortingDirection(direction)
+        dispatch(fetchWarehouses({field: field, order: direction}))
+    }
+    
     useEffect(() => {
-        dispatch(fetchWarehouses())
+        dispatch(fetchWarehouses({field: 'address', order: 'ASC'}))
     }, [])
 
     return (
@@ -76,6 +85,9 @@ export const Warehouses: FC = () => {
                 onSubmitClick={onSubmitClick}
                 seIsCloseForm={handleCloseForm}
                 onDeleteItem={onDeleteItem}
+                sortingDirection={sortingDirection}
+                sortingColumn={sortingColumn}
+                onSortClick={onSortClick}
             />
         </section>
     )

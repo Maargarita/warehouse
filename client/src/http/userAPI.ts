@@ -6,8 +6,8 @@ export const login = async (login: string, password: string) => {
     return data.token
 }
 
-export const getUsersList = async () => {
-    return await $authHost.get('api/user')
+export const getUsersList = async (field: string, order: string) => {
+    return await $authHost.get('api/user', {params: {field, order}})
 }
 
 export const createUser = async (data: object) => {

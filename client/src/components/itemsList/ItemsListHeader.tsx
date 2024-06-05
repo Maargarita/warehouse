@@ -8,10 +8,15 @@ type ItemsListHeaderProps = {
     headerElement: RefObject<HTMLDivElement> | null,
     isVerticalScroll: boolean,
     isMinScrollYPosition: boolean,
-    sectionElement: RefObject<HTMLDivElement> | null
+    sectionElement: RefObject<HTMLDivElement> | null,
+    sortingDirection?: string,
+    sortingColumn?: string,
+    onSortClick: (field: string) => void
 }
 
-export const ItemsListHeader: FC<ItemsListHeaderProps> = ({columns, tableElement, headerElement, isVerticalScroll, isMinScrollYPosition, sectionElement}) => {
+export const ItemsListHeader: FC<ItemsListHeaderProps> = ({columns, tableElement, headerElement, isVerticalScroll, isMinScrollYPosition, 
+    sectionElement, sortingDirection, sortingColumn, onSortClick}) => {
+
     const [sizingColumnIndex, setSizingColumnIndex] = useState(null)
     const [changedValues, setChangedValues] = useState<number[] | null>(null)
     const [offsetX, setOffsetX] = useState(0)
@@ -93,23 +98,23 @@ export const ItemsListHeader: FC<ItemsListHeaderProps> = ({columns, tableElement
                 }}
                 ref={headerElement}
             >
-                { columns.map(({name, fieldName, type}, index) => 
+                { columns.map(({name, fieldName}, index) => 
                     <div
                         key={index}
                         className={`tw-relative tw-group tw-overflow-hidden tw-truncate tw-border-r
                                     tw-text-left tw-text-sm tw-font-semibold tw-pl-5 tw-pr-6 tw-py-0.5 tw-border-gray-400`}
                     >
-                        {/* <span
+                        <span
                             className={`tw-absolute tw-left-0 tw-inset-y-auto group-hover:tw-opacity-50 
                                         ${sortingColumn ? sortingColumn === fieldName ? 'tw-opacity-100' : 'tw-opacity-0' : 'tw-opacity-50'}
                                     `}
-                            onClick={() => onSortClick(fieldName, type)}
+                            onClick={() => onSortClick(fieldName)}
                         >
-                            { sortingDirection === 'up'
+                            { sortingDirection === 'DESC'
                                 ?   <ChevronUpIcon className='tw-w-5 tw-h-5' aria-hidden='true'/>
                                 :   <ChevronDownIcon className='tw-w-5 tw-h-5' aria-hidden='true'/>
                             }
-                        </span> */}
+                        </span>
                         <span 
                             data-tooltip-id="items-list-tooltip"
                             data-tooltip-content={name}

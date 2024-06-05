@@ -14,10 +14,15 @@ export type ItemsListContainerProps = {
     isCloseForm: boolean,
     onSubmitClick: (form: object, id: string | null) => void,
     seIsCloseForm: (isClose: boolean) => void,
-    onDeleteItem: (id: string) => void
+    onDeleteItem: (id: string) => void,
+    sortingDirection?: string,
+    sortingColumn?: string,
+    onSortClick: (field: string) => void
 }
 
-export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, isLoading, isCloseForm, onSubmitClick, seIsCloseForm, onDeleteItem}) => {
+export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, isLoading, isCloseForm, onSubmitClick, seIsCloseForm, onDeleteItem,
+    sortingDirection, sortingColumn, onSortClick }) => {
+
     const tableElement = useRef<HTMLTableElement>(null)
     const headerElement = useRef<HTMLDivElement>(null)
     const sectionElement = useRef<HTMLDivElement>(null)
@@ -83,6 +88,9 @@ export const ItemsListContainer: FC<ItemsListContainerProps> = ({columns, list, 
                 isVerticalScroll={isVerticalScroll}
                 isMinScrollYPosition={isMinScrollYPosition}
                 sectionElement={sectionElement}
+                sortingDirection={sortingDirection}
+                sortingColumn={sortingColumn}
+                onSortClick={onSortClick}
             />
             <div ref={sectionElement} className='tw-overflow-auto tw-h-[calc(100%-4rem)]'  onScroll={(e) => processTableScroll(e.target)}>
               <table ref={tableElement} className='tw-w-full tw-text-gray-900 tw-font-medium tw-text-sm'>

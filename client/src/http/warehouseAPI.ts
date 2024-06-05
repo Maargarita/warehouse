@@ -1,8 +1,8 @@
 import { $authHost } from "."
 import { changeWarehouseParams } from "../store/slices/warehouseSlice"
 
-export const getWarehousesList = async () => {
-    return await $authHost.get('api/warehouse')
+export const getWarehousesList = async (field: string, order: string) => {
+    return await $authHost.get('api/warehouse', {params: {field, order}})
 }
 
 export const createWarehouse = async (data: object) => {

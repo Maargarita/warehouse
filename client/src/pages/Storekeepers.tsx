@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import { NavBar } from '../components/NavBar'
 import { ItemsListContainer } from '../components/itemsList/ItemsListContainer'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +21,8 @@ export const Storekeepers: FC = () => {
     const { storekeepersList, isLoading, isCloseForm } = useSelector(selectStorekeeper)
     const { usersList } = useSelector(selectUser)
     const { warehousesList } = useSelector(selectWarehouse)
+    const [sortingDirection, setSortingDirection] = useState('ASC')
+    const [sortingColumn, setSortingColumn] = useState('surname')
     const storekeeperColumns = [
         {
             name: 'Фамилия',
@@ -109,11 +111,18 @@ export const Storekeepers: FC = () => {
     const onDeleteItem = (id: string) => {
         dispatch(deleteStorekeeper(id))
     }
+
+    const onSortClick = (field: string) => {
+        const direction = sortingDirection == 'ASC' ? 'DESC': 'ASC'
+        setSortingColumn(field)
+        setSortingDirection(direction)
+        dispatch(fetchStorekeepers({field: field, order: direction}))
+    }
     
     useEffect(() => {
-        dispatch(fetchStorekeepers())
-        dispatch(fetchUsers())
-        dispatch(fetchWarehouses())
+        dispatch(fetchStorekeepers({field: 'surname', order: 'ASC'}))
+        dispatch(fetchUsers({field: 'login', order: 'ASC'}))
+        dispatch(fetchWarehouses({field: 'address', order: 'ASC'}))
     }, [])
 
     return (
@@ -127,6 +136,9 @@ export const Storekeepers: FC = () => {
                 onSubmitClick={onSubmitClick}
                 seIsCloseForm={handleCloseForm}
                 onDeleteItem={onDeleteItem}
+                sortingDirection={sortingDirection}
+                sortingColumn={sortingColumn}
+                onSortClick={onSortClick}
             />
         </section>
     )

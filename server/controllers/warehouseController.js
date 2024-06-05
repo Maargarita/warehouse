@@ -34,9 +34,13 @@ class WarehouseController {
     }
 
     async getAll (request, response, next) {
-        let {limit, offset} = request.query
+        let {limit, offset, field, order} = request.query
         try {
-            const warehouses = await Warehouse.findAndCountAll({limit, offset})
+            const warehouses = await Warehouse.findAndCountAll({limit, offset,
+                order: [
+                    [field, order]
+                ] 
+            })
             return response.json(warehouses)
         } catch (error) {
             return next(ApiError.internal('Непредвиденная ошибка', error))

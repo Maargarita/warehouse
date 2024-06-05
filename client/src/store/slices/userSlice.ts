@@ -3,11 +3,11 @@ import { getUsersList, createUser, editUser, removeUser } from "../../http/userA
 import { RootState } from "../store"
 import { toast } from "react-toastify"
  
-export const fetchUsers = createAsyncThunk<FetchUsersProps, undefined, {rejectValue: string}>(
+export const fetchUsers = createAsyncThunk<FetchUsersProps, {field: string, order: string}, {rejectValue: string}>(
     'user/fetchUsers',
-    async function(_, {rejectWithValue}) {
+    async function(params, {rejectWithValue}) {
       try {
-        const response = await getUsersList()
+        const response = await getUsersList(params.field, params.order)
         return response.data
       } catch (error: any) {
         toast.error(error.response.data.message, { position: "top-center"})

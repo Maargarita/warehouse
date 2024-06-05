@@ -56,7 +56,7 @@ class StorekeeperController {
     }
 
     async getAll (request, response, next) {
-        let {limit, offset} = request.query
+        let {limit, offset, field, order} = request.query
         try {
             const storekeepers = await Storekeeper.findAndCountAll({limit, offset,
                 include: [
@@ -76,7 +76,10 @@ class StorekeeperController {
                         [Sequelize.col('user.login'), "user_login"], 
                         [Sequelize.col('warehouse.address'), "warehouse_address"]
                     ]
-                }
+                },
+                order: [
+                    [field, order]
+                ] 
             })
             return response.json(storekeepers)
         } catch (error) {

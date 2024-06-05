@@ -1,8 +1,8 @@
 import { $authHost } from "."
 import { changeStorekeeperParams } from "../store/slices/storekeeperSlice"
 
-export const getStorekeepersList = async () => {
-    return await $authHost.get('api/storekeeper')
+export const getStorekeepersList = async (field: string, order: string) => {
+    return await $authHost.get('api/storekeeper', {params: {field, order}})
 }
 
 export const createStorekeeper = async (data: object) => {

@@ -3,11 +3,11 @@ import { getWarehousesList, createWarehouse, editWarehouse, removeWarehouse } fr
 import { RootState } from "../store"
 import { toast } from "react-toastify"
 
-export const fetchWarehouses = createAsyncThunk<FetchWarehousesProps, undefined, {rejectValue: string}>(
+export const fetchWarehouses = createAsyncThunk<FetchWarehousesProps, {field: string, order: string}, {rejectValue: string}>(
     'warehouse/fetchWarehouses',
-    async function(_, {rejectWithValue}) {
+    async function(params, {rejectWithValue}) {
       try {
-        const response = await getWarehousesList()
+        const response = await getWarehousesList(params.field, params.order)
         return response.data
       } catch (error: any) {
         toast.error(error.response.data.message, { position: "top-center"})

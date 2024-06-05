@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC, useEffect, useState} from 'react'
 import { NavBar } from '../components/NavBar'
 import { ItemsListContainer } from '../components/itemsList/ItemsListContainer'
 import { useDispatch, useSelector } from 'react-redux'
@@ -18,6 +18,8 @@ export const Products: FC = () => {
     const dispatch = useDispatch<AppDispatch>()
     const { productsList, isLoading, isCloseForm } = useSelector(selectProduct)
     const { warehousesList } = useSelector(selectWarehouse)
+    const [sortingDirection, setSortingDirection] = useState('ASC')
+    const [sortingColumn, setSortingColumn] = useState('article_number')
     const productColumns = [
         {
             name: 'Артикль',
@@ -95,10 +97,17 @@ export const Products: FC = () => {
     const onDeleteItem = (id: string) => {
         dispatch(deleteProduct(id))
     }
+
+    const onSortClick = (field: string) => {
+        const direction = sortingDirection == 'ASC' ? 'DESC': 'ASC'
+        setSortingColumn(field)
+        setSortingDirection(direction)
+        dispatch(fetchProducts({field: field, order: direction}))
+    }
     
     useEffect(() => {
-        dispatch(fetchProducts())
-        dispatch(fetchWarehouses())
+        dispatch(fetchProducts({field: 'article_number', order: 'ASC'}))
+        dispatch(fetchWarehouses({field: 'address', order: 'ASC'}))
     }, [])
 
     return (
@@ -112,6 +121,9 @@ export const Products: FC = () => {
                 onSubmitClick={onSubmitClick}
                 seIsCloseForm={handleCloseForm}
                 onDeleteItem={onDeleteItem}
+                sortingDirection={sortingDirection}
+                sortingColumn={sortingColumn}
+                onSortClick={onSortClick}
             />
         </section>
     )

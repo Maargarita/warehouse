@@ -3,11 +3,11 @@ import { getStorekeepersList, createStorekeeper, editStorekeeper, removeStorekee
 import { RootState } from "../store"
 import { toast } from "react-toastify"
 
-export const fetchStorekeepers = createAsyncThunk<FetchStorekeepersProps, undefined, {rejectValue: string}>(
+export const fetchStorekeepers = createAsyncThunk<FetchStorekeepersProps, {field: string, order: string}, {rejectValue: string}>(
     'storekeeper/fetchStorekeepers',
-    async function(_, {rejectWithValue}) {
+    async function(params, {rejectWithValue}) {
       try {
-        const response = await getStorekeepersList()
+        const response = await getStorekeepersList(params.field, params.order)
         return response.data
       } catch (error: any) {
         toast.error(error.response.data.message, { position: "top-center"})

@@ -1,8 +1,8 @@
 import { $authHost } from "."
 import { changeProductParams } from "../store/slices/productSlice"
 
-export const getProductsList = async () => {
-    return await $authHost.get('api/product')
+export const getProductsList = async (field: string, order: string) => {
+    return await $authHost.get('api/product', {params: {field, order}})
 }
 
 export const createProduct = async (data: object) => {
